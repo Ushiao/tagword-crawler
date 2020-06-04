@@ -2,7 +2,7 @@
 # Copyright 2017 The TAGWORD Authors. All Rights Reserved.
 # Name: TAGWORD爬虫User-Agents列表
 # Description: 数据通信交互部件，方便对User-Agent进行查询或替换
-# Contact: contact@tagword.cn
+# Contact: contact@tagword_crawler.cn
 # ==============================================================================
 from __future__ import absolute_import
 from __future__ import division

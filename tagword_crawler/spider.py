@@ -1,7 +1,7 @@
 # -*- coding:utf-8 -*-
 # Name: 
 # Description: 
-# Contact: contact@tagword.cn
+# Contact: contact@tagword_crawler.cn
 # =========================================================
 from __future__ import absolute_import
 from __future__ import division
@@ -12,7 +12,7 @@ import http.cookiejar as cookielib
 from requests import Request, Session
 from urllib.parse import urlparse
 
-from tagword.crawler.spiders.ua import USER_AGENTS
+from tagword_crawler.ua import USER_AGENTS
 
 
 class SpiderProto(object):

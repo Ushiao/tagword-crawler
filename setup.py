@@ -20,7 +20,7 @@ setup(
     # Versions should comply with PEP440.  For a discussion on single-sourcing
     # the version across setup.py and the project code, see
     # https://packaging.python.org/en/latest/single_source_version.html
-    version='0.1.1',
+    version='0.1.3',
 
     description='a toolkit for cralwer Chinese OTA site data',
     long_description=long_description,
@@ -40,8 +40,8 @@ setup(
         # How mature is this project? Common values are
         #   3 - Alpha
         #   4 - Beta
-        #   5 - Production/Stable
-        'Development Status :: 5 - Stable',
+        #   5 - Production/Stable,
+        'Development Status :: 3 - Alpha',
 
         # Indicate who your project is intended for
         'Intended Audience :: Developers',
@@ -67,7 +67,7 @@ setup(
     # You can just specify the packages manually here if your project is
     # simple. Or you can use find_packages().
     packages=find_packages(exclude=['contrib', 'docs', 'tests', '__pycache__']),
-    # packages=["tagword"], 
+    # packages=["tagword_crawler"],
 
     # List run-time dependencies here.  These will be installed by pip when
     # your project is installed. For an analysis of "install_requires" vs pip's
@@ -91,7 +91,7 @@ setup(
     # installed, specify them here.  If using Python 2.6 or less, then these
     # have to be included in MANIFEST.in as well.
     # package_data={
-    #     'tagword': [
+    #     'tagword_crawler': [
     #                 'data/*'
     #                 ],
     # },

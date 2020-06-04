@@ -1,12 +1,13 @@
 # -*- coding:utf-8 -*-
 # Name: 
 # Description: 
-# Contact: contact@tagword.cn
+# Contact: contact@tagword_crawler.cn
 # =========================================================
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
+import sys
 import random
 from queue import Queue
 import threading
@@ -16,15 +17,14 @@ import pkgutil
 import importlib
 from urllib.parse import urlparse
 
-from tagword.crawler import spiders
-
 
 def create_crawler():
     app = TGWCrawler()
-    for pkg in pkgutil.walk_packages(spiders.__path__):
+    for pkg in pkgutil.walk_packages(sys.path):
         if pkg.ispkg:
-            p = importlib.import_module("." + pkg.name, package="tagword.crawler.spiders")
-            app.register_spider(p.main[1], url_host=p.main[0])
+            if pkg.name.startswith("tagword_crawler_"):
+                p = importlib.import_module(pkg.name)
+                app.register_spider(p.main[1], url_host=p.main[0])
     return app
 
 
