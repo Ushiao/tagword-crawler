@@ -60,8 +60,16 @@ class TGWCrawler(object):
             output.append(item)
         return output
 
-    def fetch(self, **kwargs):
-        return self._fetch(**kwargs)
+    def fetch(self, items):
+        output = []
+        for item in items:
+            result = self._fetch(**item)
+            if result is None:
+                continue
+            for item in result:
+                output.append(item)
+            time.sleep(random.randint(1, 5))
+        return output
 
     def __fetch(self, q, p):
         while not q.empty():
