@@ -24,7 +24,7 @@ def create_crawler():
         if pkg.ispkg:
             if pkg.name.startswith("tagword_crawler_"):
                 p = importlib.import_module(pkg.name)
-                app.register_spider(p.main[1], url_host=p.main[0])
+                app.register_spider(p.main[1:], url_host=p.main[0])
     return app
 
 
@@ -33,8 +33,9 @@ class TGWCrawler(object):
         self.__spiders = {}
         self.__proxies = {}
 
-    def register_spider(self, spider, url_host):
-        self.__spiders.update({url_host: spider})
+    def register_spider(self, spiders, url_host):
+        for spider in spiders:
+            self.__spiders[url_host] = self.__spiders.get(url_host, []) + [spider]
 
     def register_proxy(self, proxies):
         self.__proxies = proxies
@@ -63,10 +64,12 @@ class TGWCrawler(object):
     def fetch(self, items):
         output = []
         for item in items:
+            source = item['source']
             result = self._fetch(**item)
             if result is None:
                 continue
             for item in result:
+                item['source'] = source
                 output.append(item)
             time.sleep(random.randint(1, 5))
         return output
@@ -74,10 +77,12 @@ class TGWCrawler(object):
     def __fetch(self, q, p):
         while not q.empty():
             item = q.get()
+            source = item['source']
             result = self._fetch(**item)
             if result is None:
                 continue
             for item in result:
+                item['source'] = source
                 p.put(item)
             time.sleep(random.randint(1, 5))
 
@@ -85,12 +90,20 @@ class TGWCrawler(object):
         parsed_uri = urlparse(kwargs.get("url"))
         host = parsed_uri.netloc
         schema = parsed_uri.scheme
-        spider = self.__spiders.get(host, None)
+        spiders = self.__spiders.get(host, None)
+        if spiders is None:
+            return None
+        spider = None
+        if len(spiders) == 1:
+            spider = spiders[0]
+        elif len(spiders) > 1:
+            for spider in spiders:
+                if spider.__name__ == kwargs.get("spider"):
+                    break
         if spider is None:
             return None
 
         spider = spider()
-
         # 设置ssl验证
         if schema == 'https':
             spider.verify = True
@@ -112,29 +125,3 @@ class TGWCrawler(object):
                 print(proxy)
         return result
 
-
-if __name__ == "__main__":
-
-    # 准备连接
-    items = [
-        {"url": "http://www.meituan.com/zhoubianyou/93311902/", "pagenum": 0},
-        {"url": "http://piao.ctrip.com/ticket/dest/t1412255.html", "pagenum": 0},
-        {"url": "http://piao.ctrip.com/ticket/dest/t762.html", "pagenum": 0},
-        {"url": "http://piao.ctrip.com/ticket/dest/t1816019.html", "pagenum": 0},
-        {"url": "http://piao.ctrip.com/ticket/dest/t4651499.html", "pagenum": 0},
-        {"url": "http://hotels.ctrip.com/hotel/48565681.html", "pagenum": 0},
-    ]
-
-    # inf = open("../proxy/proxies.list", "r")
-    # proxies = {"http": [], "https": []}
-    # for line in inf:
-    #     item = json.loads(line)
-    #     if item['valid'] == False:
-    #         continue
-    #     proxies[item['schema'].lower()].append("%s://%s:%s" % (item['schema'].lower(), item['ip'], item['port']))
-
-    crawler = create_crawler()
-    # crawler.register_proxy(proxies)
-    result = crawler.multi_fetch(items)
-    for i in result:
-        print(i)
