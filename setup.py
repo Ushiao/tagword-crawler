@@ -75,7 +75,7 @@ setup(
     # https://packaging.python.org/en/latest/requirements.html
     install_requires=[
         "bs4==0.0.1",
-        "requests==2.23.0"
+        "requests==2.31.0"
     ],
 
     # List additional groups of dependencies here (e.g. development
